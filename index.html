@@ -18,34 +18,10 @@
     </script>
     -->
 
-    <!-- Which dealer's widget loads: the demo dealer by default, the 1,000-car test dealer with
-      ?widget=test. The choice sticks for the tab (pages and reloads); ?widget=demo goes back.
-      The embed tag sits in a <template> so it doesn't run on its own, while vite.config.ts's
-      WIDGET_LOADER / WIDGET_ID still rewrite it for local runs; the script below copies it. -->
-    <template id="miles-widget-embed">
-      <script
-        src="https://dev.cdn.autodice.com/widget.js"
-        data-widget-id="autodice_f602c727-d12f-4e20-93c4-2b19bed07325">
-      </script>
-    </template>
-    <script>
-      (function () {
-        var TEST_WIDGET_ID = 'autodice_c5393219-55f9-4b4a-9f9f-41ad08e28131';
-        var requested = new URLSearchParams(window.location.search).get('widget');
-        var choice = requested === 'test' || requested === 'demo' ? requested : null;
-        try {
-          if (choice) sessionStorage.setItem('demo-widget', choice);
-          else choice = sessionStorage.getItem('demo-widget');
-        } catch (error) {
-          // Storage blocked: the URL alone decides.
-        }
-        var embed = document.getElementById('miles-widget-embed').content.querySelector('script');
-        var script = document.createElement('script');
-        if (embed.type) script.type = embed.type;
-        script.src = embed.src;
-        script.dataset.widgetId = choice === 'test' ? TEST_WIDGET_ID : embed.dataset.widgetId;
-        document.body.appendChild(script);
-      })();
+    <!-- The 1,000-car test dealer's widget. -->
+    <script
+      src="https://dev.cdn.autodice.com/widget.js"
+      data-widget-id="autodice_c5393219-55f9-4b4a-9f9f-41ad08e28131">
     </script>
   </body>
 </html>
