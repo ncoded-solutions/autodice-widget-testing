@@ -1,6 +1,6 @@
 // Basic-auth gate for the whole site. The page source carries the widget ID,
 // and anyone holding it can drive the chat API (and our OpenAI spend), so
-// nothing is served until the visitor enters SITE_PASSWORD (any username).
+// nothing is served until the visitor enters SITE_PASSWORD, in either field.
 // Fails closed: with SITE_PASSWORD unset, every request gets a 503.
 
 declare const Netlify: { env: { get(key: string): string | undefined } };
@@ -14,16 +14,24 @@ const timingSafeEqual = (a: string, b: string) => {
   return diff === 0;
 };
 
-const passwordFrom = (header: string | null) => {
-  if (!header?.startsWith('Basic ')) return null;
+// What the visitor typed in the sign-in box, username and password both: people put the password
+// in the username field too. UTF-8, as the realm asks, so a pasted typographic dash survives to be
+// normalized below.
+const credentialsFrom = (header: string | null): string[] => {
+  if (!header?.startsWith('Basic ')) return [];
   try {
-    const decoded = atob(header.slice('Basic '.length));
+    const bytes = Uint8Array.from(atob(header.slice('Basic '.length)), (char) => char.charCodeAt(0));
+    const decoded = new TextDecoder().decode(bytes);
     const separator = decoded.indexOf(':');
-    return separator === -1 ? null : decoded.slice(separator + 1);
+    return separator === -1 ? [decoded] : [decoded.slice(0, separator), decoded.slice(separator + 1)];
   } catch {
-    return null;
+    return [];
   }
 };
+
+// Forgives what copying a password from an email or chat tends to do to it: spaces around it, and
+// hyphens turned into en or em dashes (or a minus sign).
+const normalize = (value: string) => value.trim().replace(/[\u2010-\u2015\u2212]/g, '-');
 
 export default async (request: Request, context: { next: () => Promise<Response> }) => {
   const expected = Netlify.env.get('SITE_PASSWORD');
@@ -31,8 +39,9 @@ export default async (request: Request, context: { next: () => Promise<Response>
     return new Response('Site locked: SITE_PASSWORD is not configured.', { status: 503 });
   }
 
-  const supplied = passwordFrom(request.headers.get('authorization'));
-  if (supplied !== null && timingSafeEqual(supplied, expected)) {
+  const password = normalize(expected);
+  const supplied = credentialsFrom(request.headers.get('authorization'));
+  if (supplied.some((value) => timingSafeEqual(normalize(value), password))) {
     return context.next();
   }
 
