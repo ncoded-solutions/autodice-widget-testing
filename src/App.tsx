@@ -1,19 +1,41 @@
+import { useEffect, useState, type MouseEvent } from 'react';
 import { INVENTORY } from './data/inventory';
 import { STRINGS, localeFromPath } from './i18n';
 import './App.css';
 
-// Read once: switching language is a full page load, as on most dealer sites.
-const locale = localeFromPath(window.location.pathname);
-const t = STRINGS[locale];
-
-const currency = (value: number) =>
-  value.toLocaleString(t.numberLocale, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
-
-const miles = (value: number) => `${value.toLocaleString(t.numberLocale)} mi`;
-
-const term = (value: string) => t.terms[value] ?? value;
+// By default switching language is a full page load, as on most dealer sites, and <html lang>
+// stays "en". With ?switch=soft the page behaves like a single-page app instead (Next.js, Nuxt):
+// the switch is a client-side navigation that updates the URL and <html lang>, with no reload.
+const SOFT_SWITCH = new URLSearchParams(window.location.search).get('switch') === 'soft';
 
 function App() {
+  const [locale, setLocale] = useState(() => localeFromPath(window.location.pathname));
+  const t = STRINGS[locale];
+
+  useEffect(() => {
+    if (!SOFT_SWITCH) return;
+    document.documentElement.lang = locale;
+  }, [locale]);
+
+  useEffect(() => {
+    if (!SOFT_SWITCH) return;
+    const onPopState = () => setLocale(localeFromPath(window.location.pathname));
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+
+  const switchLanguage = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (!SOFT_SWITCH) return;
+    event.preventDefault();
+    window.history.pushState(null, '', t.switchTo.href + window.location.search);
+    setLocale(localeFromPath(t.switchTo.href));
+  };
+
+  const currency = (value: number) =>
+    value.toLocaleString(t.numberLocale, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+  const miles = (value: number) => `${value.toLocaleString(t.numberLocale)} mi`;
+  const term = (value: string) => t.terms[value] ?? value;
+
   return (
     <>
       <header className="site-header">
@@ -28,7 +50,13 @@ function App() {
             <a href="#contact">{t.nav.contact}</a>
           </nav>
           <div className="header-actions">
-            <a className="lang-switch" href={t.switchTo.href} hrefLang={t.switchTo.lang} lang={t.switchTo.lang}>
+            <a
+              className="lang-switch"
+              href={t.switchTo.href + window.location.search}
+              hrefLang={t.switchTo.lang}
+              lang={t.switchTo.lang}
+              onClick={switchLanguage}
+            >
               {t.switchTo.label}
             </a>
             <a className="btn btn-primary" href="#contact">

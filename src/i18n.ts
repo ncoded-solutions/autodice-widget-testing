@@ -1,8 +1,8 @@
 export type Locale = 'en' | 'fr';
 
-// The URL is the page's only language signal for now: /fr/... is French, anything else English.
-// index.html keeps <html lang="en"> on every page on purpose, like a dealer site whose shared
-// template hardcodes it, so the widget has to read the language off the path.
+// /fr/... is French, anything else English. index.html keeps <html lang="en"> on every page on
+// purpose, like a dealer site whose shared template hardcodes it, so by default the widget has to
+// read the language off the path. ?switch=soft also keeps <html lang> in step (see App).
 export function localeFromPath(pathname: string): Locale {
   return pathname.split('/')[1]?.toLowerCase() === 'fr' ? 'fr' : 'en';
 }
