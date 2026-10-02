@@ -106,6 +106,22 @@ body {
   color: var(--ink);
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.lang-switch {
+  color: var(--ink-soft);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.lang-switch:hover {
+  color: var(--ink);
+}
+
 /* Hero */
 .hero {
   background: var(--bg-alt);

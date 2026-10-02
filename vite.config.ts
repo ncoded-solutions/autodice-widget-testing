@@ -1,7 +1,33 @@
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
+
+// Runs the page against the widget's own dev servers instead of the deployed widget:
+//   WIDGET_LOADER=http://localhost:4545/src/loader/index.ts yarn dev
+// (`npm run dev:frame` in autodice/widget serves that loader). It's an ES module, so the tag
+// becomes type="module"; the loader then finds it by data-widget-id. WIDGET_ID swaps in another
+// widget, for one whose domain whitelist has localhost.
+function localWidget(): Plugin {
+  const loader = process.env.WIDGET_LOADER
+  const widgetId = process.env.WIDGET_ID
+  return {
+    name: 'local-widget',
+    transformIndexHtml(html) {
+      let result = html
+      if (loader) {
+        result = result.replace(
+          /<script\s+src="https:\/\/dev\.cdn\.autodice\.com\/widget\.js"/g,
+          `<script type="module" src="${loader}"`,
+        )
+      }
+      if (widgetId) {
+        result = result.replace(/data-widget-id="[^"]*"/g, `data-widget-id="${widgetId}"`)
+      }
+      return result
+    },
+  }
+}
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), localWidget()],
 })

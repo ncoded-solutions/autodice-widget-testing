@@ -1,10 +1,17 @@
 import { INVENTORY } from './data/inventory';
+import { STRINGS, localeFromPath } from './i18n';
 import './App.css';
 
-const currency = (value: number) =>
-  value.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+// Read once: switching language is a full page load, as on most dealer sites.
+const locale = localeFromPath(window.location.pathname);
+const t = STRINGS[locale];
 
-const miles = (value: number) => `${value.toLocaleString('en-US')} mi`;
+const currency = (value: number) =>
+  value.toLocaleString(t.numberLocale, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+
+const miles = (value: number) => `${value.toLocaleString(t.numberLocale)} mi`;
+
+const term = (value: string) => t.terms[value] ?? value;
 
 function App() {
   return (
@@ -15,61 +22,57 @@ function App() {
             Summit&nbsp;Motors
           </a>
           <nav className="nav">
-            <a href="#inventory">Inventory</a>
-            <a href="#financing">Financing</a>
-            <a href="#about">About</a>
-            <a href="#contact">Contact</a>
+            <a href="#inventory">{t.nav.inventory}</a>
+            <a href="#financing">{t.nav.financing}</a>
+            <a href="#about">{t.nav.about}</a>
+            <a href="#contact">{t.nav.contact}</a>
           </nav>
-          <a className="btn btn-primary" href="#contact">
-            Get Pre-Approved
-          </a>
+          <div className="header-actions">
+            <a className="lang-switch" href={t.switchTo.href} hrefLang={t.switchTo.lang} lang={t.switchTo.lang}>
+              {t.switchTo.label}
+            </a>
+            <a className="btn btn-primary" href="#contact">
+              {t.getPreApproved}
+            </a>
+          </div>
         </div>
       </header>
 
       <section id="top" className="hero">
         <div className="container hero-inner">
           <div>
-            <p className="eyebrow">Family owned since 1998</p>
-            <h1>Quality used cars, honest prices.</h1>
-            <p className="lede">
-              Browse our hand-inspected inventory of sedans, SUVs, trucks and EVs. Every vehicle
-              comes with a free 100-point inspection and a 7-day exchange guarantee.
-            </p>
+            <p className="eyebrow">{t.eyebrow}</p>
+            <h1>{t.heroTitle}</h1>
+            <p className="lede">{t.heroLede}</p>
             <div className="hero-actions">
               <a className="btn btn-primary" href="#inventory">
-                View Inventory
+                {t.viewInventory}
               </a>
               <a className="btn btn-ghost" href="#contact">
-                Schedule Test Drive
+                {t.scheduleTestDrive}
               </a>
             </div>
           </div>
           <dl className="stats">
-            <div>
-              <dt>26</dt>
-              <dd>Years in business</dd>
-            </div>
-            <div>
-              <dt>4.9★</dt>
-              <dd>Average rating</dd>
-            </div>
-            <div>
-              <dt>3,200+</dt>
-              <dd>Cars sold</dd>
-            </div>
+            {t.stats.map((stat) => (
+              <div key={stat.label}>
+                <dt>{stat.value}</dt>
+                <dd>{stat.label}</dd>
+              </div>
+            ))}
           </dl>
         </div>
       </section>
 
       <section id="inventory" className="section">
         <div className="container">
-          <h2>Featured Inventory</h2>
-          <p className="section-sub">A few of the vehicles currently on our lot.</p>
+          <h2>{t.featuredTitle}</h2>
+          <p className="section-sub">{t.featuredSub}</p>
           <div className="grid">
             {INVENTORY.map((car) => (
               <article className="card" key={car.id}>
                 <div className="card-media">
-                  {car.badge && <span className="badge">{car.badge}</span>}
+                  {car.badge && <span className="badge">{term(car.badge)}</span>}
                   <span className="card-media-label">
                     {car.year} {car.make} {car.model}
                   </span>
@@ -82,12 +85,12 @@ function App() {
                   <p className="card-price">{currency(car.price)}</p>
                   <ul className="card-specs">
                     <li>{miles(car.mileage)}</li>
-                    <li>{car.fuel}</li>
-                    <li>{car.transmission}</li>
+                    <li>{term(car.fuel)}</li>
+                    <li>{term(car.transmission)}</li>
                     <li>{car.color}</li>
                   </ul>
                   <a className="btn btn-outline" href="#contact">
-                    Check Availability
+                    {t.checkAvailability}
                   </a>
                 </div>
               </article>
@@ -99,41 +102,30 @@ function App() {
       <section id="financing" className="section section-alt">
         <div className="container financing-inner">
           <div>
-            <h2>Financing made simple</h2>
-            <p>
-              We work with a network of local and national lenders to get you a competitive rate,
-              regardless of credit history. Get pre-approved in minutes without affecting your
-              credit score.
-            </p>
+            <h2>{t.financingTitle}</h2>
+            <p>{t.financingBody}</p>
             <a className="btn btn-primary" href="#contact">
-              Start Application
+              {t.startApplication}
             </a>
           </div>
           <ul className="checklist">
-            <li>Soft credit check only</li>
-            <li>All credit types welcome</li>
-            <li>Trade-ins accepted</li>
-            <li>Terms up to 72 months</li>
+            {t.checklist.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
           </ul>
         </div>
       </section>
 
       <section id="about" className="section">
         <div className="container about-inner">
-          <h2>Why buy from Summit Motors?</h2>
+          <h2>{t.whyTitle}</h2>
           <div className="grid grid-3">
-            <div>
-              <h3>100-point inspection</h3>
-              <p>Every vehicle is inspected bumper to bumper before it hits the lot.</p>
-            </div>
-            <div>
-              <h3>7-day exchange</h3>
-              <p>Not the right fit? Swap it for another vehicle within a week, no questions asked.</p>
-            </div>
-            <div>
-              <h3>No hidden fees</h3>
-              <p>The price on the tag is the price you pay. Always.</p>
-            </div>
+            {t.reasons.map((reason) => (
+              <div key={reason.title}>
+                <h3>{reason.title}</h3>
+                <p>{reason.body}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -145,9 +137,7 @@ function App() {
             <p>482 Ridgeline Ave, Springfield, IL</p>
             <p>(555) 019-4488 · sales@summitmotors.example</p>
           </div>
-          <p className="footer-note">
-            This is a demo dealership site used for widget integration testing.
-          </p>
+          <p className="footer-note">{t.footerNote}</p>
         </div>
       </footer>
     </>
