@@ -6,12 +6,12 @@
 
   var STRINGS = {
     en: {
-      label: 'Pre-Owned',
       vin: 'VIN #',
       stock: '# stock',
       priceLabel: 'Purchase Price',
       cash: 'on cash purchase',
       fine: '(GST/QST), licensing, insurance & registration not included.',
+      offer: 'Offer details',
       details: 'See details',
       rebate: 'Dealer Rebate',
       km: 'KM',
@@ -20,12 +20,12 @@
     },
     // Their French site's own wording.
     fr: {
-      label: 'Occasion',
       vin: '# de série',
       stock: 'Inventaire #',
       priceLabel: "Prix d'achat",
       cash: 'en achat comptant',
       fine: '(TPS/TVQ), immatriculation, assurances & enregistrement non inclus.',
+      offer: "Détails de l'offre",
       details: 'Voir les détails',
       rebate: 'Remise concessionnaire',
       km: 'KM',
@@ -35,17 +35,22 @@
   };
   var t = STRINGS[locale];
 
-  // Nissans from the 1,000-car test inventory Spinelli's Miles has on dev, so a car on the page is
-  // one Miles can talk about. Photos come from Autodice's own media CDN.
+  // Used Toyotas from the 1,000-car test inventory Spinelli's Miles has on dev, so a car on the
+  // page is one Miles can talk about. Photos come from Autodice's own media CDN; these twelve have
+  // distinct photos, no other dealer's banner on them, and model years that exist.
   var CARS = [
-    { stock: 'T10162', vin: 'B7PB52XNN8X6AS5WZ', year: 2023, model: 'Rogue', trim: 'S', price: 22795, regularPrice: null, km: 50500, transmission: 'Automatic', photo: 'https://dev.media.autodice.com/car-listings/6aabec16dd5f1f8faac935ca/62f72fbd-22f4-4e78-baa7-2fc4e8594653-L.avif' },
-    { stock: 'T10064', vin: 'DZ8MW6DF1TGLPMR53', year: 2021, model: 'Kicks', trim: 'SR', price: 16095, regularPrice: 16795, km: 77021, transmission: 'Automatic', photo: 'https://dev.media.autodice.com/car-listings/6aabec68dd5f1f8faac93654/b2951260-78e7-4714-8f12-3ec09aa8b3d7-L.avif' },
-    { stock: 'T10042', vin: '2YTDEYDJLUTYL38SS', year: 2025, model: 'Kicks', trim: 'S', price: 23395, regularPrice: null, km: 25608, transmission: 'Automatic', photo: 'https://dev.media.autodice.com/car-listings/6aabec79dd5f1f8faac93681/71e2fa50-d12c-4aa1-9825-2b0aee37475f-L.avif' },
-    { stock: 'T10093', vin: 'EG1CTUPZK4LHWM9NH', year: 2022, model: 'Sentra', trim: 'SR', price: 15995, regularPrice: null, km: 88939, transmission: 'Automatic', photo: 'https://dev.media.autodice.com/car-listings/6abb678806bee0a2a2ed4224/3b93e825-0f89-48ae-acc5-cc55380914be-L.avif' },
-    { stock: 'T10104', vin: 'GVCYU832CX5GVVBDV', year: 2019, model: 'Pathfinder', trim: 'SL', price: 21595, regularPrice: null, km: 151044, transmission: 'Automatic', photo: 'https://dev.media.autodice.com/car-listings/6aab8885f507acc62e4801d2/0b087456-cce1-47fe-9626-1ca8b60f70c4-L.avif' },
-    { stock: 'T10375', vin: 'RFA2A3358AEWL1C38', year: 2018, model: 'LEAF', trim: 'S', price: 15795, regularPrice: null, km: 127078, transmission: 'Automatic', photo: 'https://dev.media.autodice.com/car-listings/6abb61a606bee0a2a2ed3955/f4b833c8-fef4-4118-8d41-09dfc40775cd-L.avif' },
-    { stock: 'T10024', vin: 'BJK1XSTTYTJR526YL', year: 2020, model: 'Altima', trim: 'SR', price: 16495, regularPrice: null, km: 98775, transmission: 'Automatic', photo: 'https://dev.media.autodice.com/car-listings/6aafa6eae25bacff934c6079/fd00afcc-fc97-495a-a3b5-7d0661120097-L.avif' },
-    { stock: 'T10198', vin: 'A39LSHPWLP0HSU297', year: 2020, model: 'Rogue', trim: 'SV', price: 17495, regularPrice: null, km: 108286, transmission: 'Automatic', photo: 'https://dev.media.autodice.com/car-listings/6aabee694277da7f961ed4a5/4574c5ca-d04f-40de-8750-441fc68ed9ad-L.avif' },
+    { stock: 'T10688', vin: 'NPWVKA7427UMWH4L4', year: 2018, model: 'Corolla', trim: 'SE', price: 9595, regularPrice: 11195, km: 118485, transmission: 'Automatic', photo: 'https://dev.media.autodice.com/car-listings/69bce9e5a5a215111b78a72b/48d9e10b-9364-4572-851c-308c5920efbd-L.avif' },
+    { stock: 'T10843', vin: 'UXA0BTDMFX95HMUXC', year: 2019, model: 'RAV4', trim: 'Limited', price: 18995, regularPrice: 19995, km: 96732, transmission: 'Automatic', photo: 'https://dev.media.autodice.com/car-listings/69bce898a5a215111b789ad3/0bdf0cdb-7b6d-49dd-a2ff-dfa62cbe2dc6-L.avif' },
+    { stock: 'T10002', vin: 'U5VPCR277X9DH9M3E', year: 2023, model: 'Camry', trim: 'LE', price: 24495, regularPrice: 27095, km: 62461, transmission: 'Automatic', photo: 'https://dev.media.autodice.com/car-listings/68a209c75efa63222223bff8/b7d3808f-924c-48e3-9747-38bdd2b5e8bc-L.avif' },
+    { stock: 'T10037', vin: 'CUXHFGF354JK5158D', year: 2022, model: 'Corolla Cross', trim: 'L', price: 16595, regularPrice: null, km: 60177, transmission: 'Automatic', photo: 'https://dev.media.autodice.com/car-listings/69bce92aa5a215111b78a020/5e34c62b-da70-4a3b-84a9-746cef74fb3b-L.avif' },
+    { stock: 'T10837', vin: 'TTPR25EVD2CRT7BXM', year: 2019, model: 'Highlander', trim: 'Limited', price: 24795, regularPrice: null, km: 99880, transmission: 'Automatic', photo: 'https://dev.media.autodice.com/car-listings/69bce9fea5a215111b78a84d/0012708a-6fae-4186-9cb2-b38a0077f9b2-L.avif' },
+    { stock: 'T10883', vin: 'VLNKTHMMFY995D7GS', year: 2020, model: 'Tundra', trim: 'Limited', price: 29995, regularPrice: 32395, km: 113964, transmission: 'Automatic', photo: 'https://dev.media.autodice.com/car-listings/6aa8f13263f26ba55e0689de/cfe27ae7-7e17-45bc-81cc-309de906a405-L.avif' },
+    { stock: 'T10580', vin: '2VH4YBTXXVC1CFX12', year: 2021, model: 'RAV4', trim: 'Trail', price: 21895, regularPrice: null, km: 65138, transmission: 'Automatic', photo: 'https://dev.media.autodice.com/car-listings/69bce994a5a215111b78a412/9867052d-b3f0-4f89-9140-3d269f8a3bee-L.avif' },
+    { stock: 'T10629', vin: 'W076Z3K0NKTG9X6UJ', year: 2017, model: 'Sienna', trim: 'Limited', price: 19695, regularPrice: 20695, km: 157421, transmission: 'Automatic', photo: 'https://dev.media.autodice.com/car-listings/69bce9a8a5a215111b78a4c9/8fbfd397-8296-4419-aaf3-c6d67c1b9225-L.avif' },
+    { stock: 'T10913', vin: 'HH9493T0D0NVVGASP', year: 2023, model: 'bZ4X', trim: 'XLE', price: 35495, regularPrice: null, km: 53947, transmission: 'Automatic', photo: 'https://dev.media.autodice.com/car-listings/69bce9d0a5a215111b78a64d/2afd4cfb-249c-44a2-8057-726e88f532e9-L.avif' },
+    { stock: 'T10405', vin: 'TWV2XC8XMG0KXKXMT', year: 2020, model: 'Corolla', trim: 'XSE', price: 13295, regularPrice: null, km: 102169, transmission: 'Automatic', photo: 'https://dev.media.autodice.com/car-listings/69bce931a5a215111b78a068/d9732d02-438a-49a1-9703-c8e290850db1-L.avif' },
+    { stock: 'T10434', vin: '2TYAGMC9Y5HZRTWL0', year: 2024, model: 'RAV4 Prime', trim: 'XSE', price: 42595, regularPrice: null, km: 31291, transmission: 'Automatic', photo: 'https://dev.media.autodice.com/car-listings/69bcea1aa5a215111b78a98f/b20ab880-e54b-4c39-96d0-45e878e952b6-L.avif' },
+    { stock: 'T10336', vin: '3AD2U4FNSLR9639LT', year: 2022, model: 'Camry', trim: 'LE', price: 20395, regularPrice: null, km: 75937, transmission: 'Automatic', photo: 'https://dev.media.autodice.com/car-listings/69bce9dba5a215111b78a6cb/e5409c1d-8c4d-439d-b498-fdb2e46275be-L.avif' },
   ];
 
   var ICONS = {
@@ -54,8 +59,13 @@
     gauge: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 18a8 8 0 1 1 16 0"/><path d="m12 14 4-5"/></svg>',
   };
 
-  function money(value) {
-    return value.toLocaleString(t.numberLocale, { style: 'currency', currency: 'CAD', maximumFractionDigits: 0 });
+  function money(value, cents) {
+    return value.toLocaleString(t.numberLocale, {
+      style: 'currency',
+      currency: 'CAD',
+      minimumFractionDigits: cents ? 2 : 0,
+      maximumFractionDigits: cents ? 2 : 0,
+    });
   }
 
   function escape(value) {
@@ -70,13 +80,12 @@
     return (
       '<article class="car">' +
       '<div class="car__media">' +
-      '<img src="' + escape(car.photo) + '" alt="Nissan ' + escape(name) + '" loading="lazy" />' +
-      (rebate ? '<div class="car__rebate">' + ICONS.tag + t.rebate + ' ' + money(rebate) + '</div>' : '') +
+      '<img src="' + escape(car.photo) + '" alt="Toyota ' + escape(name) + '" loading="lazy" />' +
+      (rebate ? '<div class="car__rebate">' + ICONS.tag + '<span>' + t.rebate + ' ' + money(rebate, true) + '</span></div>' : '') +
       '</div>' +
       '<div class="car__body">' +
-      '<span class="car__label">' + t.label + '</span>' +
       '<div class="car__ids">' + t.vin + ' ' + escape(car.vin) + '<br />' + t.stock + ' ' + escape(car.stock) + '</div>' +
-      '<p class="car__make">Nissan</p>' +
+      '<p class="car__make">Toyota</p>' +
       '<p class="car__name">' + escape(name) + '</p>' +
       '<p class="car__trim">' + escape(car.trim) + '</p>' +
       '<div class="car__specs">' +
@@ -85,11 +94,14 @@
       '</div>' +
       '<div class="car__price">' +
       '<div class="car__price-label">' + t.priceLabel + '</div>' +
+      '<div class="car__amounts">' +
       (rebate ? '<div class="car__was">' + money(car.regularPrice) + '</div>' : '') +
       '<div class="car__amount">' + money(car.price) + '</div>' +
-      '<p class="car__fine">' + t.cash + '<br />' + t.fine + '</p>' +
       '</div>' +
-      '<a class="btn btn--red" href="#">' + t.details + '</a>' +
+      '<p class="car__fine">' + t.cash + '<br />' + t.fine + '</p>' +
+      '<a class="car__offer" href="#">' + t.offer + '</a>' +
+      '</div>' +
+      '<a class="btn btn--black" href="#">' + t.details + '</a>' +
       '</div>' +
       '</article>'
     );
@@ -192,7 +204,7 @@
 
     var markCars = function () {};
     function buildDots() {
-      markCars = dots(carousel.querySelector('.carousel__dots'), pages(), scrollToPage);
+      markCars = dots(carousel.querySelector('.dots'), pages(), scrollToPage);
       markCars(page());
     }
 
@@ -221,6 +233,15 @@
     });
   });
 
+  // Back to the top, from the footer.
+  var top = document.querySelector('[data-scroll-top]');
+  if (top) {
+    top.addEventListener('click', function (event) {
+      event.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
   // Phone menu.
   var toggle = document.querySelector('.menu-toggle');
   var nav = document.querySelector('.nav');
@@ -228,16 +249,6 @@
     toggle.addEventListener('click', function () {
       var open = nav.classList.toggle('is-open');
       toggle.setAttribute('aria-expanded', String(open));
-    });
-  }
-
-  // About: the rest of the text on demand.
-  var more = document.querySelector('.about__more');
-  if (more) {
-    more.addEventListener('click', function () {
-      var text = more.closest('.about__text');
-      var open = text.classList.toggle('is-open');
-      more.textContent = open ? more.dataset.less : more.dataset.more;
     });
   }
 })();
