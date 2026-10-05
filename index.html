@@ -1,27 +1,14 @@
 <!doctype html>
-<!-- lang stays "en" on every page, French ones too, unless ?switch=soft (see src/App.tsx). -->
+<!-- The demo's pages are copies of Spinelli Nissan's (scripts/mirror-page.mjs), at their paths:
+     /en and /fr. Netlify redirects / to /en (netlify.toml); this covers `yarn dev`. -->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Summit Motors</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta http-equiv="refresh" content="0; url=/en/" />
+    <title>Miles demo</title>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-
-    <!--
-    <script
-      src="https://dev.cdn.autodice.com/widget.js"
-      data-widget-id="autodice_d7961c11-88c1-4da5-bd9b-33eea5abdded">
-    </script>
-    -->
-
-    <!-- The 1,000-car test dealer's widget. -->
-    <script
-      src="https://dev.cdn.autodice.com/widget.js"
-      data-widget-id="autodice_c5393219-55f9-4b4a-9f9f-41ad08e28131">
-    </script>
+    <a href="/en/">Open the demo</a>
   </body>
 </html>

@@ -5,7 +5,7 @@
 
 declare const Netlify: { env: { get(key: string): string | undefined } };
 
-const REALM = 'Summit Motors (internal)';
+const REALM = 'Miles demo (internal)';
 
 const timingSafeEqual = (a: string, b: string) => {
   if (a.length !== b.length) return false;

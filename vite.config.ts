@@ -1,5 +1,5 @@
+import { existsSync } from 'node:fs'
 import { defineConfig, type Plugin } from 'vite'
-import react from '@vitejs/plugin-react'
 
 // Runs the page against the widget's own dev servers instead of the deployed widget:
 //   WIDGET_LOADER=http://localhost:4545/src/loader/index.ts yarn dev
@@ -27,7 +27,13 @@ function localWidget(): Plugin {
   }
 }
 
+// The dealer pages copied by scripts/mirror-page.mjs, at the dealer's own paths. / only sends
+// visitors on to /en.
+const PAGES = ['index.html', 'en/index.html', 'fr/index.html'].filter((page) => existsSync(page))
+
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), localWidget()],
+  appType: 'mpa',
+  plugins: [localWidget()],
+  build: { rollupOptions: { input: PAGES } },
 })
