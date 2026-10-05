@@ -651,6 +651,10 @@ button {
 .about__text:not(.is-open) .about__extra {
   display: none;
 }
+/* The tag's height would otherwise stay at 405px as max-width narrows it. */
+.about img {
+  height: auto;
+}
 
 /* Newsletter */
 .newsletter {
